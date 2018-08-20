@@ -41,7 +41,7 @@
             </div>
 
             <div class="col-sm-8">
-                <input type="text" class="form-control" placeholder="Kashipur"
+                <input type="text" class="form-control" placeholder="Los Angeles"
                        v-bind:id="getHashedElementId('city')"
                        v-model="formData.city">
             </div>
@@ -85,11 +85,11 @@
         <div class="form-group row">
             <div class="col-sm-4">
                 <label class="col-form-label font-weight-bold"
-                       v-bind:for="getHashedElementId('county')">County</label>
+                       v-bind:for="getHashedElementId('county')">County / State</label>
             </div>
 
             <div class="col-sm-8">
-                <input type="text" class="form-control" placeholder="County"
+                <input type="text" class="form-control" placeholder="County / State"
                        v-bind:id="getHashedElementId('county')"
                        v-model="formData.county">
             </div>
