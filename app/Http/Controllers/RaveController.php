@@ -48,6 +48,7 @@ class RaveController extends Controller
         $user->subscriptions()->create([
             'amount' => $data['amount'],
             'data' => $customer_data,
+            'plan_id' => $data['paymentplan'],
             'payment_gateway' => 'rave',
             'status' => SubscriptionStatus::PENDING,
             'txref' => $data['ref']
