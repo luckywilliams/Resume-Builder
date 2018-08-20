@@ -85,6 +85,10 @@ const mutations = {
         state.resume.setTemplate(template);
     },
 
+    UPDATE_SECTIONS: (state, sections) => {
+        state.resume.setSections(sections);
+    },
+
     /**
      * Updates the data of the section of the index.
      *
@@ -189,6 +193,10 @@ const actions = {
      */
     updateResumeTemplate: ({ commit }, template) => {
         commit("UPDATE_RESUME_TEMPLATE", template);
+    },
+
+    updateSections: ({ commit }, data) => {
+        commit("UPDATE_SECTIONS", data);
     },
 
     /**

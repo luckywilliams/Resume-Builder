@@ -5,7 +5,7 @@
                 v-for="(section, index) in resume.getSections()"
                 v-bind:index="index"
                 v-bind:key="index"
-                v-bind:aria-labelledby="section.getComponentHash()"
+                v-bind:aria-labelledby="section.getComponentHash() + '-tab'"
                 v-bind:id="section.getComponentHash()">
 
             <section-additional-skills-component
