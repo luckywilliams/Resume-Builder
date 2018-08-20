@@ -14,16 +14,10 @@
                         <div class="buttons text-right">
                             <button type="button" class="btn btn-light" data-dismiss="modal" aria-label="Close">Back</button>
 
-                            <form class="d-inline" name="download-resume"
-                                v-bind:action="form_action_url"
-                                v-bind:method="form_method">
-                                <input name="_token" type="hidden" :value="$CSRF_TOKEN"/>
-                                <input name="template" type="hidden" :value="resume.getTemplate()">
-
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa-download"></i>&nbsp;Download
-                                </button>
-                            </form>
+                            <button class="btn btn-primary"
+                                    v-on:click="downloadResume">
+                                <i class="fa-download"></i>&nbsp;Download
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -35,7 +29,7 @@
                             v-bind:index="index"
                             v-bind:key="template.name">
                             <div class="text-center"
-                                v-bind:class="{'active': template.name === selectedTemplate}"
+                                v-bind:class="{'active': template.name === resume.getTemplate()}"
                                 v-on:click="fetchPreview(template.name)">
                                 <img class="img-thumbnail img-fluid rounded cursor-pointer mx-auto d-block" v-bind:src="template.preview">
 
@@ -75,26 +69,21 @@
             ]),
         },
 
-        created() {
-            this.selectedTemplate = this.resume.getTemplate();
-        },
-
         data() {
             return {
-                preview_src: "",
-                selectedTemplate: ""
+                preview_src: ""
             };
         },
 
         methods: {
             fetchPreview(template) {
-                this.selectedTemplate = template;
+                this.$store.dispatch('updateResumeTemplate', template);
 
                 const PREVIEW_URL = APP_API + '/resumes/preview';
 
                 let params = {
                         data: JSON.stringify(this.resume.getSections()),
-                        template: this.selectedTemplate,
+                        template: template,
                         title: this.resume.getName()
                     };
 
@@ -111,11 +100,30 @@
                         console.log(error.response);
                     });
             },
+
+            downloadResume() {
+                let form = $('form[name="download-resume"]');
+
+                if (form.length < 1) {
+                    form = $('form[name="resume-new"]');
+                }
+
+                form.submit();
+            }
         },
 
-        props: {
-            form_action_url: String,
-            form_method: String
+        watch: {
+            resume: {
+                deep: true,
+                immediate: true,
+                handler: _.debounce( function (resume) {
+                    if (resume !== undefined) {
+                        this.fetchPreview(
+                            resume.getTemplate()
+                        );
+                    }
+                }, 200 )
+            }
         }
     };
 </script>

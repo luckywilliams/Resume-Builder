@@ -85,7 +85,11 @@ class RaveController extends Controller
         $subscription = Subscription::with('user')->where('txref', $txref)->firstOrFail();
         $user = $subscription->user;
 
-        if (request()->status !== 'success') {
+        $response = request()->toArray();
+        $response = json_decode($response['resp']);
+        $status = $response->data->data->status;
+
+        if ($status !== 'successful') {
             $subscription->status = SubscriptionStatus::FAILED;
             $subscription->save();
 
