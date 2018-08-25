@@ -53,12 +53,10 @@
                                                             $badge_class = "badge-danger";
                                                     }
 
-                                                    $plan = array_values(array_where($plans, function ($item) use ($subscription) {
-                                                        return $item->id === $subscription->plan_id;
-                                                    }));
-
-                                                    if (count($plan) > 0) {
-                                                        $plan_name = $plan[0]->name;
+                                                    if (is_object($plans) && property_exists($plans, 'id')) {
+                                                        if ((int) $plans->id === (int) $subscription->plan_id) {
+                                                            $plan = $plans->name;
+                                                        }
                                                     }
                                                 @endphp
 

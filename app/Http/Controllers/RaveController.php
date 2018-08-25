@@ -90,6 +90,8 @@ class RaveController extends Controller
         $response = json_decode($response['resp']);
         $status = $response->data->data->status;
 
+        // TODO: Add validation for cancelled payments.
+
         if ($status !== 'successful') {
             $subscription->status = SubscriptionStatus::FAILED;
             $subscription->save();
