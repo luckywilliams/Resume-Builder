@@ -35,12 +35,34 @@
                         v-for="(item, index) in formData.items"
                         v-bind:index="index"
                         v-bind:key="index">
-                        <span v-text="item"></span>
+                        <textarea class="form-control" cols="30" rows="1" placeholder="Enter option..."
+                            v-model="editItemText"
+                            v-if="editItemIndex === index"></textarea>
+                        <span v-text="item" v-else></span>
 
-                        <button type="button" class="close ml-3" aria-label="Close"
+                        <div class="buttons ml-3" v-if="editItemIndex === index">
+                            <button type="button" class="btn btn-sm btn-light"
+                                v-on:click="saveItem()">
+                                <span class="fa-check"></span>
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-link close ml-2 mt-1" aria-label="Close"
+                                v-on:click="cancelEditing()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="buttons ml-3" v-else>
+                            <button type="button" class="btn btn-sm btn-light"
+                                v-on:click="editItem(item, index)">
+                                <span class="fa-pencil"></span>
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-link ml-2 mt-1 text-dark"
                                 v-on:click="removeItem(index)">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                                <span class="fa-trash"></span>
+                            </button>
+                        </div>
                     </li>
                 </ul>
 
@@ -61,9 +83,13 @@
     export default {
         data() {
             return {
+                editItemIndex: null,
+                editItemText: "",
+
                 formData: {
                     items: []
                 },
+
                 text: ""
             };
         },
@@ -85,6 +111,29 @@
             },
 
             /**
+             * Cancel the editing of the item.
+             * 
+             * @return {void}
+             */
+            cancelEditing() {
+                this.editItemIndex = null;
+                this.editItemText  = '';
+            },
+
+            /**
+             * Edits the item stored at the index.
+             * 
+             * @param  {String} item
+             * @param  {Number} index
+             * 
+             * @return {void}
+             */
+            editItem(item, index) {
+                this.editItemIndex = index;
+                this.editItemText  = item;
+            },
+
+            /**
              * Removes the item from the list by the supplied index.
              *
              * @param   {Number} index
@@ -93,6 +142,17 @@
              */
             removeItem(index) {
                 this.formData.items.splice(index, 1);
+            },
+
+            /**
+             * Saves the editing item into the items list.
+             * 
+             * @return {void}
+             */
+            saveItem() {
+                Vue.set(this.formData.items, this.editItemIndex, this.editItemText);
+
+                this.cancelEditing();
             }
         },
 
@@ -102,3 +162,9 @@
         ]
     };
 </script>
+
+<style scoped>
+    .buttons {
+        min-width: 75px;
+    }
+</style>
